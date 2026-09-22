@@ -1,0 +1,10 @@
+{
+  "name": "instinct-docs",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "docs-utils": "git+https://github.com/mohsen1/docs-utils.git"
+  }
+}
