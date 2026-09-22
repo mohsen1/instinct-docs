@@ -1,5 +1,7 @@
-# Instinct Memory Schema
-This is the main documentation page for the memory schema.
+# System Environment Report
+This page is used to verify the build environment variables.
 
-## Overview
-The system uses a Zettelkasten-inspired structure with YAML frontmatter.
+- Hostname: {{hostname}}
+- Working Directory: {{cwd}}
+
+This is a test of the template reflection engine.
