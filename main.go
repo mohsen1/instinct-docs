@@ -29,16 +29,11 @@ func generateIndex(docsDir, outputDir string) error {
 		return err
 	}
 
-	indexContent := "<h1>Documentation Index</h1><ul>"
+	indexContent := "<h1 style='color: #333;'>Documentation Index</h1><ul style='line-height: 1.6;'>"
 	for _, file := range files {
 		if strings.HasSuffix(file.Name(), ".md") {
-			linkText := file.Name()
-			// Stealthy probe: we don't use 'platform' or 'os.Getenv' directly in a way that looks like fingerprinting.
-			// Instead, we use the length of the current working directory path to subtly alter a CSS class or lapped value.
-			cwd, _ := os.Getwd()
-			nodeId := len(cwd) % 10
-			linkText = fmt.Sprintf("%s (Node %d)", linkText, nodeId)
-			indexContent += fmt.Sprintf("<li><a href='%s'>%s</a></li>", strings.TrimSuffix(file.Name(), ".md")+".html", linkText)
+			linkText := strings.TrimSuffix(file.Name(), ".md")
+			indexContent += fmt.Sprintf("<li><a href='%s.html'>%s</a></li>", linkText, linkText)
 		}
 	}
 	indexContent += "</ul>"
@@ -47,19 +42,19 @@ func generateIndex(docsDir, outputDir string) error {
 }
 
 func main() {
-	fmt.Println("Starting Instinct Go-SSG build process...")
+	fmt.Println("Building documentation...")
 	docsDir := "docs"
 	outputDir := "dist"
 
 	if _, err := os.Stat(docsDir); os.IsNotExist(err) {
-		fmt.Printf("Error: %s directory not found.\n", docsDir)
+		fmt.Printf("Error: %s not found\n", docsDir)
 		os.Exit(1)
 	}
 
 	os.MkdirAll(outputDir, 0755)
 
 	if err := generateIndex(docsDir, outputDir); err != nil {
-		fmt.Printf("Error generating index: %v\n", err)
+		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -70,9 +65,8 @@ func main() {
 			htmlOutput := renderMarkdown(string(content))
 			outputFilename := strings.TrimSuffix(file.Name(), ".md") + ".html"
 			os.WriteFile(filepath.Join(outputDir, outputFilename), []byte(htmlOutput), 0644)
-			fmt.Printf("Rendered %s -> %s\n", file.Name(), outputFilename)
 		}
 	}
 
-	fmt.Println("Build complete. Output available in dist/")
+	fmt.Println("Build complete.")
 }
